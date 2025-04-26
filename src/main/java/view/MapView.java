@@ -28,21 +28,48 @@ public class MapView {
     }
     
     private void initializeSampleGraph() {
-        // Create sample nodes (positions are screen coordinates)
+        // Clear existing data
+        graph = new Graph();
+        
+        // Create nodes (landmarks in Addis Ababa)
         Node meskel = new Node("Meskel Square", 300, 200);
         Node arat = new Node("Arat Kilo", 250, 300);
         Node piazza = new Node("Piazza", 200, 400);
         Node bole = new Node("Bole", 500, 150);
-        
+        Node mexico = new Node("Mexico", 450, 250);
+        Node saris = new Node("Saris", 400, 350);
+        Node summit = new Node("Summit", 350, 450);
+        Node gotera = new Node("Gotera", 600, 200);
+        Node legehar = new Node("Legehar", 550, 300);
+        Node kebena = new Node("Kebena", 300, 350);
+    
+        // Add all nodes
         graph.addNode(meskel);
         graph.addNode(arat);
         graph.addNode(piazza);
         graph.addNode(bole);
-        
-        // Connect them (edges will auto-calculate distances)
-        graph.addEdge(new Edge(meskel, arat, 0));
-        graph.addEdge(new Edge(arat, piazza, 0));
-        graph.addEdge(new Edge(meskel, bole, 0));
+        graph.addNode(mexico);
+        graph.addNode(saris);
+        graph.addNode(summit);
+        graph.addNode(gotera);
+        graph.addNode(legehar);
+        graph.addNode(kebena);
+    
+        // Connect them with edges (distances calculated automatically)
+        graph.addEdge(new Edge(meskel, arat));
+        graph.addEdge(new Edge(meskel, bole));
+        graph.addEdge(new Edge(meskel, kebena));
+        graph.addEdge(new Edge(arat, piazza));
+        graph.addEdge(new Edge(arat, kebena));
+        graph.addEdge(new Edge(piazza, summit));
+        graph.addEdge(new Edge(piazza, saris));
+        graph.addEdge(new Edge(bole, gotera));
+        graph.addEdge(new Edge(bole, mexico));
+        graph.addEdge(new Edge(mexico, legehar));
+        graph.addEdge(new Edge(mexico, saris));
+        graph.addEdge(new Edge(saris, legehar));
+        graph.addEdge(new Edge(saris, summit));
+        graph.addEdge(new Edge(gotera, legehar));
     }
     
     public Group createContent() {

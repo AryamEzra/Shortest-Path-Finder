@@ -25,7 +25,7 @@ public class Graph {
         edges.add(edge);
         adjacencyList.get(edge.getSource()).add(edge);
         // For undirected graph, add the reverse edge as well
-        Edge reverseEdge = new Edge(edge.getDestination(), edge.getSource(), edge.getDistance());
+        Edge reverseEdge = new Edge(edge.getDestination(), edge.getSource());
         edges.add(reverseEdge);
         adjacencyList.get(edge.getDestination()).add(reverseEdge);
     }
