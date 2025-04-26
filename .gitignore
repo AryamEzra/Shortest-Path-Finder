@@ -1,2 +1,3 @@
-lib/
-lib/javafx-sdk-*/
+/lib/
+/target/
+*.class
