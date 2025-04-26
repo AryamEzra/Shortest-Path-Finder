@@ -1,0 +1,15 @@
+{
+    "java.project.referencedLibraries": [
+        "d:\\Shortest-Path-Finder\\lib\\javafx-sdk-21.0.7\\lib\\javafx-swt.jar",
+        "d:\\Shortest-Path-Finder\\lib\\javafx-sdk-21.0.7\\lib\\javafx.web.jar",
+        "d:\\Shortest-Path-Finder\\lib\\javafx-sdk-21.0.7\\lib\\javafx.controls.jar",
+        "d:\\Shortest-Path-Finder\\lib\\javafx-sdk-21.0.7\\lib\\javafx.base.jar",
+        "d:\\Shortest-Path-Finder\\lib\\javafx-sdk-21.0.7\\lib\\javafx.media.jar",
+        "d:\\Shortest-Path-Finder\\lib\\javafx-sdk-21.0.7\\lib\\javafx.graphics.jar",
+        "d:\\Shortest-Path-Finder\\lib\\javafx-sdk-21.0.7\\lib\\javafx.fxml.jar",
+        "d:\\Shortest-Path-Finder\\lib\\javafx-sdk-21.0.7\\lib\\javafx.swing.jar"
+    ],
+    "java.project.sourcePaths": [
+        "src"
+    ]
+}
