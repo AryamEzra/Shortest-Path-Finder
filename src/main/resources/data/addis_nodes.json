@@ -1,0 +1,62 @@
+[
+    {
+      "id": 1,
+      "name": "Meskel Square",
+      "x": 400,
+      "y": 300
+    },
+    {
+      "id": 2,
+      "name": "Bole Airport",
+      "x": 500,
+      "y": 250
+    },
+    {
+      "id": 3,
+      "name": "Piazza",
+      "x": 300,
+      "y": 400
+    },
+    {
+      "id": 4,
+      "name": "Arat Kilo",
+      "x": 350,
+      "y": 350
+    },
+    {
+      "id": 5,
+      "name": "Mexico Square",
+      "x": 450,
+      "y": 300
+    },
+    {
+      "id": 6,
+      "name": "Saris",
+      "x": 420,
+      "y": 320
+    },
+    {
+      "id": 7,
+      "name": "Summit",
+      "x": 380,
+      "y": 280
+    },
+    {
+      "id": 8,
+      "name": "Gotera",
+      "x": 520,
+      "y": 270
+    },
+    {
+      "id": 9,
+      "name": "Legehar",
+      "x": 480,
+      "y": 330
+    },
+    {
+      "id": 10,
+      "name": "Kebena",
+      "x": 370,
+      "y": 310
+    }
+  ]

@@ -1,6 +1,6 @@
-package main.java.view;
+package view;
 
-import main.java.algorithm.*;
+import algorithm.*;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 // import javafx.scene.Node;
@@ -10,9 +10,9 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import main.java.model.Graph;
-import main.java.model.Node;
-import main.java.model.Edge;
+import model.Graph;
+import model.Node;
+import model.Edge;
 
 
 public class MapView {
@@ -28,48 +28,105 @@ public class MapView {
     }
     
     private void initializeSampleGraph() {
-        // Clear existing data
         graph = new Graph();
         
-        // Create nodes (landmarks in Addis Ababa)
-        Node meskel = new Node("Meskel Square", 300, 200);
-        Node arat = new Node("Arat Kilo", 250, 300);
-        Node piazza = new Node("Piazza", 200, 400);
-        Node bole = new Node("Bole", 500, 150);
-        Node mexico = new Node("Mexico", 450, 250);
-        Node saris = new Node("Saris", 400, 350);
-        Node summit = new Node("Summit", 350, 450);
-        Node gotera = new Node("Gotera", 600, 200);
-        Node legehar = new Node("Legehar", 550, 300);
-        Node kebena = new Node("Kebena", 300, 350);
+        // Central Hub Nodes (15 nodes)
+        Node meskel = addNode("Meskel Square", 400, 300);
+        Node arat = addNode("Arat Kilo", 350, 350);
+        Node piazza = addNode("Piazza", 300, 400);
+        Node bole = addNode("Bole Airport", 500, 250);
+        Node mexico = addNode("Mexico", 450, 300);
+        Node saris = addNode("Saris", 400, 350);
+        Node summit = addNode("Summit", 350, 450);
+        Node gotera = addNode("Gotera", 600, 250);
+        Node legehar = addNode("Legehar", 550, 300);
+        Node kebena = addNode("Kebena", 350, 320);
+        Node megenagna = addNode("Megenagna", 420, 330);
+        Node urael = addNode("Urael", 330, 300);
+
     
-        // Add all nodes
-        graph.addNode(meskel);
-        graph.addNode(arat);
-        graph.addNode(piazza);
-        graph.addNode(bole);
-        graph.addNode(mexico);
-        graph.addNode(saris);
-        graph.addNode(summit);
-        graph.addNode(gotera);
-        graph.addNode(legehar);
-        graph.addNode(kebena);
+        // Bole Area Expansion (10 nodes)
+        Node boleMed = addNode("Bole Medhanialem", 520, 220);
+        Node boleBulb = addNode("Bole Bulbula", 550, 200);
+        Node boleDembel = addNode("Dembel City", 480, 230);
+        Node boleBridge = addNode("Bole Bridge", 470, 270);
+        Node bole18 = addNode("Bole 18", 530, 280);
     
-        // Connect them with edges (distances calculated automatically)
-        graph.addEdge(new Edge(meskel, arat));
-        graph.addEdge(new Edge(meskel, bole));
-        graph.addEdge(new Edge(meskel, kebena));
-        graph.addEdge(new Edge(arat, piazza));
-        graph.addEdge(new Edge(arat, kebena));
-        graph.addEdge(new Edge(piazza, summit));
-        graph.addEdge(new Edge(piazza, saris));
-        graph.addEdge(new Edge(bole, gotera));
-        graph.addEdge(new Edge(bole, mexico));
-        graph.addEdge(new Edge(mexico, legehar));
-        graph.addEdge(new Edge(mexico, saris));
-        graph.addEdge(new Edge(saris, legehar));
-        graph.addEdge(new Edge(saris, summit));
-        graph.addEdge(new Edge(gotera, legehar));
+        // Piassa Area Expansion (8 nodes)
+        Node enatBank = addNode("Enat Bank", 280, 380);
+        Node posta = addNode("Posta Bet", 270, 350);
+        Node shiroMeda = addNode("Shiro Meda", 250, 450);
+        Node entoto = addNode("Entoto", 200, 500);
+        Node merkato = addNode("Merkato", 320, 380);
+    
+        // Eastern Expansion (8 nodes)
+        Node gotera2 = addNode("Gotera 2", 620, 270);
+        Node legehar2 = addNode("Legehar 2", 580, 320);
+        Node megenagna2 = addNode("Megenagna 2", 440, 360);
+        Node saris2 = addNode("Saris 2", 430, 400);
+    
+        // Western Expansion (9 nodes)
+        Node kolfe = addNode("Kolfe", 200, 350);
+        Node gurdShola = addNode("Gurd Shola", 220, 320);
+        Node mekaneYesus = addNode("Mekane Yesus", 240, 280);
+        Node bantyketu = addNode("Bantyketu", 180, 400);
+    
+        // Connect Central Hub (Radial Pattern)
+        connectBidirectional(meskel, arat, 1500);
+        connectBidirectional(meskel, bole, 4000);
+        connectBidirectional(meskel, kebena, 800);
+        connectBidirectional(arat, piazza, 2000);
+        connectBidirectional(arat, kebena, 700);
+        connectBidirectional(piazza, summit, 2500);
+        connectBidirectional(piazza, merkato, 800);
+        connectBidirectional(bole, gotera, 3000);
+        connectBidirectional(bole, mexico, 1500);
+        connectBidirectional(mexico, legehar, 1800);
+        connectBidirectional(mexico, saris, 2200);
+        connectBidirectional(saris, legehar, 1200);
+        connectBidirectional(saris, summit, 1500);
+        connectBidirectional(gotera, legehar, 2500);
+    
+        // Connect Bole Area (Dense Network)
+        connectBidirectional(bole, boleMed, 500);
+        connectBidirectional(boleMed, boleBulb, 800);
+        connectBidirectional(boleMed, boleDembel, 600);
+        connectBidirectional(boleDembel, boleBridge, 400);
+        connectBidirectional(boleBridge, mexico, 300);
+        connectBidirectional(boleBridge, bole18, 700);
+    
+        // Connect Piassa Area (Historic Center)
+        connectBidirectional(piazza, enatBank, 200);
+        connectBidirectional(enatBank, posta, 150);
+        connectBidirectional(posta, urael, 300);
+        connectBidirectional(piazza, shiroMeda, 1000);
+        connectBidirectional(shiroMeda, entoto, 1500);
+        connectBidirectional(piazza, merkato, 800);
+        connectBidirectional(merkato, kolfe, 1200);
+    
+        // Connect Ring Roads
+        connectBidirectional(gotera, gotera2, 500);
+        connectBidirectional(legehar, legehar2, 400);
+        connectBidirectional(megenagna, megenagna2, 600);
+        connectBidirectional(saris, saris2, 800);
+    
+        // Connect Western Areas
+        connectBidirectional(kolfe, gurdShola, 300);
+        connectBidirectional(gurdShola, mekaneYesus, 400);
+        connectBidirectional(mekaneYesus, kebena, 500);
+        connectBidirectional(kolfe, bantyketu, 900);
+    }
+    
+    // Helper methods
+    private Node addNode(String name, double x, double y) {
+        Node node = new Node(name, x, y);
+        graph.addNode(node);
+        return node;
+    }
+    
+    private void connectBidirectional(Node a, Node b, double meters) {
+        graph.addEdge(new Edge(a, b));
+        graph.addEdge(new Edge(b, a));
     }
     
     public Group createContent() {
@@ -187,4 +244,5 @@ public class MapView {
         
         System.out.println("\nSelection reset - ready for new pathfinding");
     }
+
 }

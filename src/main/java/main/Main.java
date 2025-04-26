@@ -1,9 +1,9 @@
-package main.java;
+package main;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import main.java.view.MapView;
+import view.MapView;
 
 public class Main extends Application {
     @Override

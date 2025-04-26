@@ -1,8 +1,8 @@
-package main.java.algorithm;
+package algorithm;
 
-import main.java.model.Edge;
-import main.java.model.Graph;
-import main.java.model.Node;
+import model.Edge;
+import model.Graph;
+import model.Node;
 import java.util.*;
 
 public class DijkstraAlgorithm {
