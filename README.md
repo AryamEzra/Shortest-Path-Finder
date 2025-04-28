@@ -3,6 +3,11 @@
 A JavaFX desktop application demonstrating Dijkstra's algorithm for finding the shortest path on a simplified map of Addis Ababa, featuring a step-by-step visualization. Runs entirely offline.
 
 ## 🎥 Demo Video
+
+https://github.com/user-attachments/assets/b2c597de-59bb-4b77-af18-65f06792dc1c
+
+
+
 ---
 
 ## ✨ Features
