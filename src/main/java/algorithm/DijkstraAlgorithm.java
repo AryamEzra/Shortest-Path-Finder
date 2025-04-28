@@ -44,10 +44,13 @@ public class DijkstraAlgorithm {
             }
 
             StringBuilder sb = new StringBuilder();
-            sb.append("Shortest Path Details:\n");
-            sb.append(String.format("Total Distance: %.2f units\n", totalDistance));
-            sb.append("Path Sequence (" + path.size() + " nodes):\n");
+            double distanceMeters = this.totalDistance;
+            double distanceKilometers = distanceMeters / 1000.0; // Calculate kilometers
+            sb.append(String.format("Total Distance: %.2f meters (%.3f km)\n",
+                                      distanceMeters, distanceKilometers)); // Updated format (using %.3f for km for more precision here)
+            // *********************
 
+            sb.append("Path Sequence (" + path.size() + " nodes):\n");
             for (int i = 0; i < path.size(); i++) {
                 Node node = path.get(i);
                 sb.append(String.format("%d. %s", i + 1, node.getName()));

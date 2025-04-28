@@ -3,20 +3,20 @@ package view;
 import algorithm.DijkstraAlgorithm;
 import algorithm.DijkstraAlgorithm.*; // Import inner classes/records
 import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
-import javafx.scene.Node; // JavaFX Node
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
+
 import model.Edge;
 import model.Graph;
 // Use the specific model.Node class, avoiding collision with javafx.scene.Node
@@ -87,12 +87,14 @@ public class MapView {
         resetButton.setOnAction(e -> resetSelectionAndSimulation());
         resetButton.setDisable(true); // Disabled until selection starts
 
-        controlPanel = new VBox(5, statusLabel, resultLabel, resetButton);
-        controlPanel.setPrefWidth(150); // Give controls some space
-
+        controlPanel = new VBox(10, statusLabel, resultLabel, resetButton); // Increased spacing
+        controlPanel.setPadding(new Insets(10)); // Add padding around controls
+        controlPanel.setPrefWidth(200); // Give controls a bit more width
+        controlPanel.setStyle("-fx-border-color: lightgray; -fx-border-width: 0 0 0 1;");
+        
         // --- Draw Map Elements ---
         drawGraph();
-
+        
         // Add map and controls to the main layout
         // Note: We might need a Pane wrapper for mapGroup if we want interaction + controls
         // For now, let's just add mapGroup directly, controls might overlap
@@ -128,8 +130,8 @@ public class MapView {
             nodeCircleMap.put(node, circle); // Store mapping
 
             // Tooltip for node name
-            // Tooltip tt = new Tooltip(node.getName());
-            // Tooltip.install(circle, tt);
+            Tooltip tt = new Tooltip(node.getName());
+            Tooltip.install(circle, tt);
 
             // Make nodes clickable
             circle.setOnMouseClicked(e -> handleNodeClick(node, circle));
@@ -137,10 +139,10 @@ public class MapView {
             mapGroup.getChildren().add(circle);
 
             // Optional: Add labels (can make it cluttered)
-            // Label label = new Label(node.getName());
-            // label.setLayoutX(node.getScreenX() + 10);
-            // label.setLayoutY(node.getScreenY() - 5);
-            // mapGroup.getChildren().add(label);
+            Label label = new Label(node.getName());
+            label.setLayoutX(node.getScreenX() + 10);
+            label.setLayoutY(node.getScreenY() - 5);
+            mapGroup.getChildren().add(label);
         }
     }
 
@@ -255,7 +257,10 @@ public class MapView {
          resetSimulationHighlights();
 
          if (result.isReachable()) {
-             resultLabel.setText(String.format("Shortest path: %.1f units", result.getTotalDistance()));
+            double distanceMeters = result.getTotalDistance();
+            double distanceKilometers = distanceMeters / 1000.0; // Calculate kilometers
+            resultLabel.setText(String.format("Shortest path: %.1f meters (%.2f km)",
+                                              distanceMeters, distanceKilometers));
              // Highlight the final path
              model.Node prev = null;
              for (model.Node node : result.getPath()) {
