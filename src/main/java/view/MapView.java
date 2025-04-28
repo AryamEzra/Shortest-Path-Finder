@@ -1,7 +1,7 @@
 package view;
 
 import algorithm.DijkstraAlgorithm;
-import algorithm.DijkstraAlgorithm.*; // Import inner classes/records
+import algorithm.DijkstraAlgorithm.*; 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Insets;
@@ -10,7 +10,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -19,7 +18,6 @@ import javafx.util.Duration;
 
 import model.Edge;
 import model.Graph;
-// Use the specific model.Node class, avoiding collision with javafx.scene.Node
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -29,12 +27,13 @@ import java.util.Map;
 public class MapView {
 
     private Graph graph;
-    private model.Node startNode = null; // Use model.Node explicitly
-    private model.Node endNode = null; // Use model.Node explicitly
+    private model.Node startNode = null; 
+    private model.Node endNode = null;
 
     // UI Elements
     private Group mapGroup; // Group for map elements (nodes, edges)
-    private VBox controlPanel; // Panel for buttons and labels
+    private VBox controlPanel;
+    private VBox rootLayout; // Panel for buttons and labels
     private Button resetButton;
     private Label statusLabel; // For messages like "Select start node"
     private Label resultLabel; // For distance result
@@ -51,11 +50,10 @@ public class MapView {
     private static final Color NODE_DEFAULT_COLOR = Color.BLUE;
     private static final Color NODE_START_COLOR = Color.GREEN;
     private static final Color NODE_END_COLOR = Color.DARKRED; // Different end color
-    private static final Color NODE_VISITED_COLOR = Color.ORANGE;
+    private static final Color NODE_VISITED_COLOR = Color.ORANGE; // Color for visited nodes
     private static final Color NODE_IN_QUEUE_COLOR = Color.LIGHTBLUE; // Color for nodes added to queue
     private static final Color PATH_COLOR = Color.RED;
     private static final Color EDGE_DEFAULT_COLOR = Color.GRAY;
-    private static final Color EDGE_RELAXED_COLOR = Color.YELLOW; // Optional highlight
 
     public MapView() {
         loadGraphData();
@@ -64,76 +62,62 @@ public class MapView {
     private void loadGraphData() {
         graph = new Graph();
         try {
-            // Adjust path if you placed files elsewhere (must be in resources)
             graph.loadFromJSONResources("/data/nodes.json", "/data/edges.json");
         } catch (IOException e) {
             System.err.println("Failed to load graph data: " + e.getMessage());
-            // Handle error appropriately, maybe show an error message in the UI
             statusLabel = new Label("Error loading graph data!");
         }
     }
 
     public Parent createContent() {
         mapGroup = new Group();
-        VBox rootLayout = new VBox(10); // Main layout
-        rootLayout.setPadding(new Insets(10));
+        rootLayout = new VBox(10); 
+        rootLayout.setPadding(new Insets(100));
 
-        // --- Status and Result Labels ---
         statusLabel = new Label("Select a start node.");
-        resultLabel = new Label(""); // Initially empty
+        resultLabel = new Label(""); 
 
-        // --- Reset Button ---
         resetButton = new Button("Reset Selection");
         resetButton.setOnAction(e -> resetSelectionAndSimulation());
-        resetButton.setDisable(true); // Disabled until selection starts
+        resetButton.setDisable(true); 
 
-        controlPanel = new VBox(10, statusLabel, resultLabel, resetButton); // Increased spacing
-        controlPanel.setPadding(new Insets(10)); // Add padding around controls
-        controlPanel.setPrefWidth(200); // Give controls a bit more width
+        controlPanel = new VBox(10, statusLabel, resultLabel, resetButton); 
+        controlPanel.setPadding(new Insets(10));
+        controlPanel.setPrefWidth(200);
         controlPanel.setStyle("-fx-border-color: lightgray; -fx-border-width: 0 0 0 1;");
         
-        // --- Draw Map Elements ---
         drawGraph();
-        
-        // Add map and controls to the main layout
-        // Note: We might need a Pane wrapper for mapGroup if we want interaction + controls
-        // For now, let's just add mapGroup directly, controls might overlap
         rootLayout.getChildren().addAll(controlPanel, mapGroup);
 
         return rootLayout;
     }
 
     private void drawGraph() {
-        mapGroup.getChildren().clear(); // Clear previous drawings
+        mapGroup.getChildren().clear(); 
         nodeCircleMap.clear();
-        edgeLineMap.clear(); // Clear edge map too
-
+        edgeLineMap.clear();
         // Draw edges first (so nodes appear on top)
         for (Edge edge : graph.getEdges()) {
-            // Avoid drawing duplicate lines for bidirectional edges in visualization
-            // Simple check: only draw if source node's hash is less than destination's
              if (edge.getSource().hashCode() < edge.getDestination().hashCode()) {
                 Line line = new Line(
                         edge.getSource().getScreenX(), edge.getSource().getScreenY(),
                         edge.getDestination().getScreenX(), edge.getDestination().getScreenY()
                 );
                 line.setStroke(EDGE_DEFAULT_COLOR);
-                line.setStrokeWidth(1.5); // Slightly thicker?
+                line.setStrokeWidth(1.5); 
                 mapGroup.getChildren().add(line);
-                 edgeLineMap.put(edge, line); // Store for potential highlighting
+                edgeLineMap.put(edge, line); 
              }
         }
 
         // Draw nodes
         for (model.Node node : graph.getNodes()) {
             Circle circle = new Circle(node.getScreenX(), node.getScreenY(), 8, NODE_DEFAULT_COLOR); // Smaller radius?
-            nodeCircleMap.put(node, circle); // Store mapping
+            nodeCircleMap.put(node, circle);
 
-            // Tooltip for node name
             Tooltip tt = new Tooltip(node.getName());
             Tooltip.install(circle, tt);
 
-            // Make nodes clickable
             circle.setOnMouseClicked(e -> handleNodeClick(node, circle));
 
             mapGroup.getChildren().add(circle);
@@ -141,7 +125,7 @@ public class MapView {
             // Optional: Add labels (can make it cluttered)
             Label label = new Label(node.getName());
             label.setLayoutX(node.getScreenX() + 10);
-            label.setLayoutY(node.getScreenY() - 5);
+            label.setLayoutY(node.getScreenY() - 10);
             mapGroup.getChildren().add(label);
         }
     }
@@ -174,10 +158,9 @@ public class MapView {
     private void runSimulation() {
         if (startNode == null || endNode == null) return;
 
-        resetButton.setDisable(true); // Disable reset during simulation run
-        resultLabel.setText(""); // Clear previous results
+        resetButton.setDisable(true); 
+        resultLabel.setText(""); 
 
-        // Clear previous simulation highlights (visited nodes, etc.) but keep start/end colors
         resetSimulationHighlights();
 
         DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph);
@@ -194,13 +177,12 @@ public class MapView {
              return;
         }
 
-
         // Setup Timeline for step-by-step visualization
         simulationTimeline = new Timeline();
-        simulationTimeline.setCycleCount(simulationSteps.size()); // One cycle per step
+        simulationTimeline.setCycleCount(simulationSteps.size()); 
 
-        // Adjust duration for speed (e.g., 50ms per step)
-        KeyFrame kf = new KeyFrame(Duration.millis(50), e -> processSimulationStep());
+        // Adjust duration for speed (100ms per step)
+        KeyFrame kf = new KeyFrame(Duration.millis(100), e -> processSimulationStep());
         simulationTimeline.getKeyFrames().add(kf);
 
         simulationTimeline.setOnFinished(e -> {
@@ -215,7 +197,7 @@ public class MapView {
 
     private void processSimulationStep() {
         if (currentStepIndex >= simulationSteps.size()) {
-            return; // Should be handled by timeline finish, but safe check
+            return;
         }
 
         StepEvent event = simulationSteps.get(currentStepIndex);
@@ -226,23 +208,10 @@ public class MapView {
             if (circle != null && !visitedEvent.node().equals(startNode) && !visitedEvent.node().equals(endNode)) {
                 circle.setFill(NODE_VISITED_COLOR);
             }
-             // System.out.println("Visited: " + visitedEvent.node().getName() + " Dist: " + visitedEvent.distance());
-        } else if (event instanceof EdgeRelaxedEvent relaxedEvent) {
-            // Optional: Highlight edge being relaxed
-            // Line line = findEdgeLine(relaxedEvent.edge()); // Need helper to find line
-            // if (line != null) {
-            //     line.setStroke(EDGE_RELAXED_COLOR);
-            //     // Use PauseTransition to revert color after a short delay
-            //     PauseTransition pt = new PauseTransition(Duration.millis(40));
-            //     pt.setOnFinished(e -> line.setStroke(EDGE_DEFAULT_COLOR));
-            //     pt.play();
-            // }
-             // System.out.println("Relaxed: " + relaxedEvent.edge() + " NewDist: " + relaxedEvent.newDistance() + " Updated: " + relaxedEvent.updated());
+             
         } else if (event instanceof QueueUpdateEvent queueEvent) {
-            // Optional: Highlight nodes when added/updated in the queue
              Circle circle = nodeCircleMap.get(queueEvent.node());
              if (circle != null && !queueEvent.node().equals(startNode) && !queueEvent.node().equals(endNode)) {
-                 // Only color if not already visited (orange takes precedence)
                  if(circle.getFill() != NODE_VISITED_COLOR) {
                     circle.setFill(NODE_IN_QUEUE_COLOR);
                  }
@@ -253,23 +222,19 @@ public class MapView {
     }
 
     private void displayFinalPath(PathResult result) {
-         // Clear any lingering simulation highlights (like queue color)
          resetSimulationHighlights();
 
          if (result.isReachable()) {
             double distanceMeters = result.getTotalDistance();
-            double distanceKilometers = distanceMeters / 1000.0; // Calculate kilometers
+            double distanceKilometers = distanceMeters / 1000.0; 
             resultLabel.setText(String.format("Shortest path: %.1f meters (%.2f km)",
                                               distanceMeters, distanceKilometers));
-             // Highlight the final path
              model.Node prev = null;
              for (model.Node node : result.getPath()) {
-                 // Highlight nodes in the path (optional, can be redundant with lines)
                   Circle circle = nodeCircleMap.get(node);
                   if (circle != null) {
                       if (node.equals(startNode)) circle.setFill(NODE_START_COLOR);
                       else if (node.equals(endNode)) circle.setFill(NODE_END_COLOR);
-                      // else circle.setFill(PATH_COLOR); // Or just rely on lines
                   }
 
                  // Draw path lines on top
@@ -294,20 +259,17 @@ public class MapView {
          }
     }
 
-
+    // Reset
     private void resetSelectionAndSimulation() {
          System.out.println("\nResetting selection and simulation...");
-         // Stop simulation if running
          if (simulationTimeline != null) {
              simulationTimeline.stop();
              simulationTimeline = null;
          }
 
-         // Clear path lines
          mapGroup.getChildren().removeIf(n -> "PATH_LINE".equals(n.getUserData()));
 
-         // Reset node colors and selections
-         resetSimulationHighlights(); // Clear intermediate colors first
+         resetSimulationHighlights();
          if(startNode != null) {
              Circle startCircle = nodeCircleMap.get(startNode);
              if(startCircle != null) startCircle.setFill(NODE_DEFAULT_COLOR);
@@ -322,27 +284,23 @@ public class MapView {
         simulationSteps = null;
         currentStepIndex = 0;
 
-        // Reset UI text/state
         statusLabel.setText("Select a start node.");
         resultLabel.setText("");
-        resetButton.setDisable(true); // Disable until start node is selected again
+        resetButton.setDisable(true);
     }
 
-     // Helper to reset temporary simulation highlights (visited, queue colors)
-     private void resetSimulationHighlights() {
-         for (Map.Entry<model.Node, Circle> entry : nodeCircleMap.entrySet()) {
-             model.Node node = entry.getKey();
-             Circle circle = entry.getValue();
-             // Only reset if it's not the selected start or end node
-             if (!node.equals(startNode) && !node.equals(endNode)) {
-                 circle.setFill(NODE_DEFAULT_COLOR);
-             } else if (node.equals(startNode)) {
-                 circle.setFill(NODE_START_COLOR); // Ensure start stays green
-             } else if (node.equals(endNode)) {
-                 circle.setFill(NODE_END_COLOR); // Ensure end stays red
-             }
-         }
-         // Optional: Reset edge colors if they were highlighted during simulation
-     }
+    private void resetSimulationHighlights() {
+        for (Map.Entry<model.Node, Circle> entry : nodeCircleMap.entrySet()) {
+            model.Node node = entry.getKey();
+            Circle circle = entry.getValue();
+            if (!node.equals(startNode) && !node.equals(endNode)) {
+                circle.setFill(NODE_DEFAULT_COLOR);
+            } else if (node.equals(startNode)) {
+                circle.setFill(NODE_START_COLOR);
+            } else if (node.equals(endNode)) {
+                circle.setFill(NODE_END_COLOR); 
+            }
+        }
+    }
 
 }

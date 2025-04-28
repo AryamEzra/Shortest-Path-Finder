@@ -13,31 +13,24 @@ import java.util.List;
 import java.util.Map;
 
 public class Graph {
-    // Store nodes by name for easy lookup during edge loading
     private final Map<String, Node> nodesByName = new HashMap<>();
-    // Adjacency list: Map<Node, List<Edge starting from Node>>
     private final Map<Node, List<Edge>> adjacencyList = new HashMap<>();
 
-    public Graph() {
-        // Constructor is now empty, loading happens explicitly
-    }
+    
+    // nodesResourcePath Path to nodes JSON file within resources (/data/nodes.json)
+    // edgesResourcePath Path to edges JSON file within resources (/data/edges.json)
+    // IOException If files cannot be read or parsed
 
-    /**
-     * Loads graph data from JSON files within the application's resources.
-     * @param nodesResourcePath Path to nodes JSON file within resources (e.g., "/data/nodes.json")
-     * @param edgesResourcePath Path to edges JSON file within resources (e.g., "/data/edges.json")
-     * @throws IOException If files cannot be read or parsed
-     */
     public void loadFromJSONResources(String nodesResourcePath, String edgesResourcePath) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
 
-        // --- Load Nodes ---
+        // Load Nodes
         InputStream nodesStream = getClass().getResourceAsStream(nodesResourcePath);
         if (nodesStream == null) {
             throw new IOException("Cannot find nodes resource file: " + nodesResourcePath);
         }
         List<Node> nodes = mapper.readValue(nodesStream, new TypeReference<List<Node>>() {});
-        nodesStream.close(); // Close stream after reading
+        nodesStream.close();
 
         // Store nodes and initialize adjacency list entries
         nodesByName.clear();
@@ -45,29 +38,25 @@ public class Graph {
         for (Node node : nodes) {
             if (nodesByName.containsKey(node.getName())) {
                  System.err.println("Warning: Duplicate node name found '" + node.getName() + "'. Ignoring duplicate.");
-                 continue; // Skip duplicates to avoid issues
+                 continue; 
             }
             nodesByName.put(node.getName(), node);
             adjacencyList.put(node, new ArrayList<>()); // Initialize empty list for edges
         }
-         System.out.println("Loaded " + nodesByName.size() + " unique nodes.");
 
-
-        // --- Load Edges ---
-        // Define a simple helper class or use Map for temporary edge data
-         TypeReference<List<Map<String, Object>>> typeRef = new TypeReference<>() {};
-         InputStream edgesStream = getClass().getResourceAsStream(edgesResourcePath);
-         if (edgesStream == null) {
-            throw new IOException("Cannot find edges resource file: " + edgesResourcePath);
-         }
-         List<Map<String, Object>> edgeDataList = mapper.readValue(edgesStream, typeRef);
-         edgesStream.close();
-
+        // Load Edges 
+        TypeReference<List<Map<String, Object>>> typeRef = new TypeReference<>() {};
+        InputStream edgesStream = getClass().getResourceAsStream(edgesResourcePath);
+        if (edgesStream == null) {
+        throw new IOException("Cannot find edges resource file: " + edgesResourcePath);
+        }
+        List<Map<String, Object>> edgeDataList = mapper.readValue(edgesStream, typeRef);
+        edgesStream.close();
+        
         int edgesLoaded = 0;
         for (Map<String, Object> edgeData : edgeDataList) {
             String nodeAName = (String) edgeData.get("nodeA");
             String nodeBName = (String) edgeData.get("nodeB");
-            // Jackson might parse numbers as Integer or Double
             double distance = ((Number) edgeData.get("distance")).doubleValue();
 
             Node nodeA = nodesByName.get(nodeAName);
@@ -109,24 +98,5 @@ public class Graph {
 
      public Node getNodeByName(String name) {
          return nodesByName.get(name);
-     }
-
-     // Optional: Find node closest to screen click (basic implementation)
-     public Node findNodeClosestToScreenXY(double screenX, double screenY) {
-         Node closest = null;
-         double minDistSq = Double.POSITIVE_INFINITY;
-
-         for (Node node : nodesByName.values()) {
-             double dx = node.getScreenX() - screenX;
-             double dy = node.getScreenY() - screenY;
-             double distSq = dx * dx + dy * dy;
-             if (distSq < minDistSq) {
-                 minDistSq = distSq;
-                 closest = node;
-             }
-         }
-         // Define a threshold - only return if click is reasonably close
-         double clickRadiusSq = 20.0 * 20.0; // Within 20 pixels
-         return (minDistSq <= clickRadiusSq) ? closest : null;
      }
 }

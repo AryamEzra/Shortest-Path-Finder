@@ -8,10 +8,10 @@ public class Node {
     private final String name;
     private final double latitude;
     private final double longitude;
-    private final double screenX; // Renamed for clarity
-    private final double screenY; // Renamed for clarity
+    private final double screenX; 
+    private final double screenY;
 
-    @JsonCreator // Helps Jackson use this constructor
+    @JsonCreator 
     public Node(@JsonProperty("name") String name,
                 @JsonProperty("latitude") double latitude,
                 @JsonProperty("longitude") double longitude,
@@ -31,8 +31,6 @@ public class Node {
     public double getScreenX() { return screenX; }
     public double getScreenY() { return screenY; }
 
-    // We no longer calculate distance based on screen coordinates here
-
     @Override
     public String toString() {
         return name + " (" + String.format("%.4f", latitude) + ", " + String.format("%.4f", longitude) + ")";
@@ -43,7 +41,6 @@ public class Node {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Node node = (Node) o;
-        // Unique name is sufficient for equality in this context
         return Objects.equals(name, node.name);
     }
 
