@@ -5,6 +5,13 @@
             "type": "java",
             "name": "Main",
             "request": "launch",
+            "mainClass": "main.java.main.Main",
+            "projectName": "Shortest-Path-Finder_1eb74924"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
             "mainClass": "main.Main",
             "projectName": "shortest-path-finder",
             "vmArgs": "--module-path lib/javafx-sdk-21.0.7/lib --add-modules javafx.controls,javafx.fxml"
