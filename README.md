@@ -2,6 +2,7 @@
 
 A JavaFX desktop application demonstrating Dijkstra's algorithm for finding the shortest path on a simplified map of Addis Ababa, featuring a step-by-step visualization. Runs entirely offline.
 
+## 🎥 Demo Video
 ---
 
 ## ✨ Features
@@ -13,7 +14,7 @@ A JavaFX desktop application demonstrating Dijkstra's algorithm for finding the 
     *   🔵 Default Node
     *   🟡 Node Added to Queue (`NODE_IN_QUEUE_COLOR`) - *Note: Color might differ based on your code*
     *   🟠 Node Visited/Finalized (`NODE_VISITED_COLOR`)
-*   เส้นทาง **Path Highlighting:** Shows the shortest path in red (🔴).
+*   **Path Highlighting:** Shows the shortest path in red (🔴).
 *   📏 **Distance Display:** Shows path length in `meters (km)`.
 *   🔄 **Reset:** Clears selection and visualization.
 *   ⚠️ **Handles Unreachable Nodes.**
