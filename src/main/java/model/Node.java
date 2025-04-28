@@ -1,25 +1,54 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Objects;
+
 public class Node {
-    private String name;
-    private double x; // x-coordinate on screen
-    private double y; // y-coordinate on screen
-    
-    public Node(String name, double x, double y) {
+    private final String name;
+    private final double latitude;
+    private final double longitude;
+    private final double screenX; // Renamed for clarity
+    private final double screenY; // Renamed for clarity
+
+    @JsonCreator // Helps Jackson use this constructor
+    public Node(@JsonProperty("name") String name,
+                @JsonProperty("latitude") double latitude,
+                @JsonProperty("longitude") double longitude,
+                @JsonProperty("screenX") double screenX,
+                @JsonProperty("screenY") double screenY) {
         this.name = name;
-        this.x = x;
-        this.y = y;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.screenX = screenX;
+        this.screenY = screenY;
     }
-    
+
     // Getters
     public String getName() { return name; }
-    public double getX() { return x; }
-    public double getY() { return y; }
-    
-    // Calculate distance to another node (for edge weight)
-    public double distanceTo(Node other) {
-        double dx = x - other.x;
-        double dy = y - other.y;
-        return Math.sqrt(dx*dx + dy*dy);
+    public double getLatitude() { return latitude; }
+    public double getLongitude() { return longitude; }
+    public double getScreenX() { return screenX; }
+    public double getScreenY() { return screenY; }
+
+    // We no longer calculate distance based on screen coordinates here
+
+    @Override
+    public String toString() {
+        return name + " (" + String.format("%.4f", latitude) + ", " + String.format("%.4f", longitude) + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Node node = (Node) o;
+        // Unique name is sufficient for equality in this context
+        return Objects.equals(name, node.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }
