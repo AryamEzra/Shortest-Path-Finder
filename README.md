@@ -1,9 +1,9 @@
-# Addis Ababa Shortest Path Finder (Dijkstra Simulation)
+# Addis Ababa Shortest Path Finder (Offline Dijkstra Simulation)
+
+[Watch Demo Video](assets/demo.mp4)
+*(Link will work once the file is pushed to GitHub)*
 
 This project is a desktop application built with JavaFX that finds and visualizes the shortest path between two locations within a simplified graph representation of Addis Ababa, Ethiopia. It uses Dijkstra's algorithm and provides a step-by-step visual simulation of the algorithm's execution. The application runs entirely offline, loading graph data from local JSON files.
-
-![Screenshot/GIF Placeholder](placeholder.png)
-*(Replace placeholder.png with an actual screenshot or GIF of your application running)*
 
 ## Features
 
@@ -36,7 +36,7 @@ This project is a desktop application built with JavaFX that finds and visualize
     *   Apache Maven installed and configured (with `MAVEN_HOME` environment variable set and `%MAVEN_HOME%\bin` added to your system's PATH).
 2.  **Clone the Repository:**
     ```bash
-    git clone <your-repository-url>
+    git clone <https://github.com/AryamEzra/Shortest-Path-Finder.git>
     cd Shortest-Path-Finder
     ```
 3.  **Build the Project:** Open a terminal or command prompt in the project's root directory (where `pom.xml` is located) and run the Maven install command. This will download dependencies (like JavaFX and Jackson) and compile the code.
